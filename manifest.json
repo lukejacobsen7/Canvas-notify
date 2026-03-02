@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Canvas Notify",
+  "version": "1.0",
+  "description": "Canvas deadline alerts straight to your Telegram",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "alarms",
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://canvas.instructure.com/*",
+    "https://canvas.ut.edu/*",
+    "https://api.telegram.org/*"
+  ]
+}

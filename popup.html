@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas Notify</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Canvas Notify</h1>
+  </div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="settings">Settings</button>
+  </div>
+
+  <div id="dashboard" class="tab-content active">
+    <div class="status-bar">
+      <div id="status-indicator" class="status-dot"></div>
+      <span id="status-text">Checking status...</span>
+      <span id="last-poll-time" class="time-text"></span>
+    </div>
+
+    <h2>Upcoming Assignments</h2>
+    <div id="assignments-list" class="assignments-list">
+      <!-- Assignment rows will be injected here -->
+      <div class="loading-text">Loading assignments...</div>
+    </div>
+    <div class="action-bar">
+      <button id="poll-now-btn" class="secondary-btn">Poll Now</button>
+    </div>
+  </div>
+
+  <div id="settings" class="tab-content">
+    <div class="form-group">
+      <label for="canvas-token">Canvas API Token</label>
+      <input type="password" id="canvas-token" placeholder="Enter Canvas Token">
+      <small><a href="https://community.canvaslms.com/t5/Student-Guide/How-do-I-manage-API-access-tokens-as-a-student/ta-p/273" target="_blank">How to get a Canvas token</a></small>
+    </div>
+    
+    <div class="form-group">
+      <label for="tg-token">Telegram Bot Token</label>
+      <input type="password" id="tg-token" placeholder="Enter Bot Token">
+      <small><a href="https://core.telegram.org/bots/features#botfather" target="_blank">How to create a Telegram Bot</a></small>
+    </div>
+    
+    <div class="form-group">
+      <label for="tg-chat-id">Telegram Chat ID</label>
+      <input type="text" id="tg-chat-id" placeholder="Enter Chat ID">
+      <small>Send a message to your bot, then visit <br><code>https://api.telegram.org/bot&lt;Token&gt;/getUpdates</code> to find your chat ID.</small>
+    </div>
+
+    <div class="form-actions">
+      <button id="save-settings-btn" class="primary-btn">Save</button>
+      <button id="test-message-btn" class="secondary-btn">Send Test Message</button>
+    </div>
+    <div id="settings-message" class="settings-message"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
