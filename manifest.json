@@ -16,7 +16,7 @@
   ],
   "host_permissions": [
     "https://canvas.instructure.com/*",
-    "https://canvas.ut.edu/*",
+    "https://utampa.instructure.com/*",
     "https://api.telegram.org/*"
   ]
 }

@@ -84,7 +84,7 @@ async function pollCanvas() {
 
     const headers = { 'Authorization': `Bearer ${canvasToken}` };
 
-    const coursesRes = await fetch('https://canvas.ut.edu/api/v1/courses?enrollment_state=active', { headers });
+    const coursesRes = await fetch('https://utampa.instructure.com/api/v1/courses?enrollment_state=active', { headers });
     if (coursesRes.status === 401) {
       await sendTelegram('Canvas Notify: Your Canvas token has expired. Please update it in the extension settings.', tgToken, tgChatId);
       await updateStatus('error');
@@ -103,7 +103,7 @@ async function pollCanvas() {
 
       // 1. Fetch assignments
       try {
-        const asgRes = await fetch(`https://canvas.ut.edu/api/v1/courses/${course.id}/assignments?bucket=upcoming&per_page=50&include[]=submission`, { headers });
+        const asgRes = await fetch(`https://utampa.instructure.com/api/v1/courses/${course.id}/assignments?bucket=upcoming&per_page=50&include[]=submission`, { headers });
         if (asgRes.ok) {
           const assignments = await asgRes.json();
           for (const asg of assignments) {
@@ -156,7 +156,7 @@ async function pollCanvas() {
 
       // 2. Fetch announcements
       try {
-        const annRes = await fetch(`https://canvas.ut.edu/api/v1/courses/${course.id}/discussion_topics?only_announcements=true&per_page=10`, { headers });
+        const annRes = await fetch(`https://utampa.instructure.com/api/v1/courses/${course.id}/discussion_topics?only_announcements=true&per_page=10`, { headers });
         if (annRes.ok) {
           const announcements = await annRes.json();
           for (const ann of announcements) {
