@@ -11,6 +11,17 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   }
 });
 
+function getNotificationTime(assignment) {
+  const pts = assignment.points_possible || 0;
+  return pts <= 25 ? { hour: 21, minute: 30 } : { hour: 10, minute: 0 };
+}
+
+function isPastNotificationTime(assignment) {
+  const { hour, minute } = getNotificationTime(assignment);
+  const now = new Date();
+  return now.getHours() > hour || (now.getHours() === hour && now.getMinutes() >= minute);
+}
+
 function getReminderLeadDays(assignment) {
   const pts = assignment.points_possible || 0;
   let step = 0;
@@ -141,12 +152,12 @@ async function pollCanvas() {
             if (asg.due_at) {
               const dueDiff = (new Date(asg.due_at) - new Date()) / (1000 * 60 * 60 * 24);
               if (dueDiff > 0) {
-                if (!asgState.reminderSent && dueDiff <= leadDays) {
+                if (!asgState.reminderSent && dueDiff <= leadDays && isPastNotificationTime(asg)) {
                   const formattedDate = new Date(asg.due_at).toLocaleString();
                   await sendTelegram(`📚 Reminder: ${escapeMd(asg.name)} (${asg.points_possible || 0} pts) is due in ${Math.round(dueDiff * 10) / 10} days — ${formattedDate}`, tgToken, tgChatId);
                   asgState.reminderSent = true;
                 }
-                if (!asgState.dayOfReminderSent && dueDiff <= 1) {
+                if (!asgState.dayOfReminderSent && dueDiff <= 1 && isPastNotificationTime(asg)) {
                   const formattedTime = new Date(asg.due_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                   await sendTelegram(`⏰ Due today: ${escapeMd(asg.name)} (${asg.points_possible || 0} pts) — due at ${formattedTime}`, tgToken, tgChatId);
                   asgState.dayOfReminderSent = true;
