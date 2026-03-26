@@ -118,7 +118,7 @@ async function pollCanvas() {
               reminderLeadDays: leadDays
             });
 
-            const asgState = updatedAssignmentsState[asg.id] || { seen: false, score: null, reminderSent: false };
+            const asgState = updatedAssignmentsState[asg.id] || { seen: false, score: null, reminderSent: false, dayOfReminderSent: false };
 
             // Check if new
             if (!asgState.seen) {
@@ -138,12 +138,19 @@ async function pollCanvas() {
             }
 
             // Check reminder
-            if (asg.due_at && !asgState.reminderSent) {
+            if (asg.due_at) {
               const dueDiff = (new Date(asg.due_at) - new Date()) / (1000 * 60 * 60 * 24);
-              if (dueDiff > 0 && dueDiff <= leadDays) {
-                const formattedDate = new Date(asg.due_at).toLocaleString();
-                await sendTelegram(`📚 Reminder: ${escapeMd(asg.name)} (${asg.points_possible || 0} pts) is due in ${Math.round(dueDiff * 10) / 10} days — ${formattedDate}`, tgToken, tgChatId);
-                asgState.reminderSent = true;
+              if (dueDiff > 0) {
+                if (!asgState.reminderSent && dueDiff <= leadDays) {
+                  const formattedDate = new Date(asg.due_at).toLocaleString();
+                  await sendTelegram(`📚 Reminder: ${escapeMd(asg.name)} (${asg.points_possible || 0} pts) is due in ${Math.round(dueDiff * 10) / 10} days — ${formattedDate}`, tgToken, tgChatId);
+                  asgState.reminderSent = true;
+                }
+                if (!asgState.dayOfReminderSent && dueDiff <= 1) {
+                  const formattedTime = new Date(asg.due_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                  await sendTelegram(`⏰ Due today: ${escapeMd(asg.name)} (${asg.points_possible || 0} pts) — due at ${formattedTime}`, tgToken, tgChatId);
+                  asgState.dayOfReminderSent = true;
+                }
               }
             }
 
